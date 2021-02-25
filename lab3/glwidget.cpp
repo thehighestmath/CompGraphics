@@ -12,37 +12,37 @@ void printVector(std::vector<std::pair<T, T>> points){
 
 int _i = 1;
 int _m = 5;
-int steps = 10;
-std::vector<float> w = {1.0, 1.0, 1.0, 1.0, 1.0};
+int steps = 20;
+std::vector<float> w = {2.0, 1.0, 2.0, 1.0, 5.0};
 
-double M_i_1() {
-    return 1.0 * steps;
+double _t(int i){
+    return 1.0 * i / steps;
+}
+
+double M(int i, double t) {
+    if (_t(i) <= t && t < _t(i + 1)){
+        return _t(i + 1) - _t(i);
+    }
+//    return 1.0 * steps;
+    return 0;
 }
 
 double M(int i, int m, double t) {
     if (m == 1) {
-        return M_i_1();
+        return M(i, t);
     }
-    return
-            1.0 * (
-                ((i + m) / static_cast<double>(steps) - t) * M(i + 1, m - 1, t) +
-                (t - i / static_cast<double>(steps)) * M(i, m - 1, t)
-                ) / (
-                m / static_cast<double>(steps)
-                );
+    return ((_t(i + m) - t) * M(i + 1, m - 1, t) +
+            (t - _t(i)) * M(i, m - 1, t)) / (_t(m));
 }
 
 double N(int j, int m, double t) {
-    return 1.0 * m / static_cast<double>(steps) * M(j, m, t);
+    return (_t(j + m) - _t(j)) * M(j, m, t);
 }
 
 double r(double t, std::vector<float>& p, std::vector<float>& w) {
-
     double numerator = 0, denominator = 0;
     for (int j = _i - _m + 1; j <= _i; j++) {
-        std::cout << j + 3 << std::endl;
         double temp = N(j, _m, t) * w[j + 3];
-        std::cout << "p[j + 3] = " << p[j + 3] << std::endl;
         numerator += temp * p[j + 3];
         denominator += temp;
     }
@@ -50,36 +50,7 @@ double r(double t, std::vector<float>& p, std::vector<float>& w) {
     return numerator / denominator;
 }
 
-GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
-    setMouseTracking(true);
-}
 
-void GLWidget::initializeGL() {
-
-}
-
-void GLWidget::resizeGL(int w, int h) {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-
-double bezier(double A,  // Start value
-              double B,  // First control value
-              double C,  // Second control value
-              double D,  // Ending value
-              double t)  // Parameter 0 <= t <= 1
-{
-    double s = 1 - t;
-    double AB = A*s + B*t;
-    double BC = B*s + C*t;
-    double CD = C*s + D*t;
-    double ABC = AB*s + BC*t;
-    double BCD = BC*s + CD*t;
-    return ABC*s + BCD*t;
-}
 
 void GLWidget::updateSplinePoints() {
     spline_points.clear();
@@ -92,24 +63,29 @@ void GLWidget::updateSplinePoints() {
     for (int i = 0; i < steps + 1; i++){
         double x, y;
         double t = i / static_cast<float>(steps);
-//        double x = bezier(
-//                points[0].first, points[1].first,
-//                points[2].first, points[3].first,
-//                i / static_cast<float>(steps)
-//                );
-//        double y = bezier(
-//                points[0].second, points[1].second,
-//                points[2].second, points[3].second,
-//                i / static_cast<float>(steps)
-//                );
+//        std::cout << t << std::endl;
         x = r(t, xPoints, w);
         y = r(t, yPoints, w);
         spline_points.push_back({x, y});
 //        std::cout << "count of elements is " << spline_points.size() << std:: endl;
     }
-    printVector(spline_points);
+//    printVector(spline_points);
 }
 
+
+GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
+    setMouseTracking(true);
+}
+void GLWidget::initializeGL() {
+
+}
+void GLWidget::resizeGL(int w, int h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
 void GLWidget::paintGL() {
     updateSplinePoints();
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -141,7 +117,6 @@ void GLWidget::paintGL() {
     }
     glEnd();
 }
-
 GLWidget::mapCoords GLWidget::fromGLCoordsToMap(float x, float y){
     ++x /= 2;
     --y /= (-2);
@@ -151,14 +126,12 @@ GLWidget::mapCoords GLWidget::fromGLCoordsToMap(float x, float y){
     };
     return coords;
 }
-
 GLWidget::glCoords GLWidget::fromMapCoordsToGL(int x, int y){
     float x_100 = 1.0 * x / this->width() * (2) - 1;
     float y_100 = 1.0 * y / this->height() * (-2) + 1;
     glCoords coords = {x_100, y_100};
     return coords;
 }
-
 int GLWidget::isMouseOnPoint(QPoint point){
     int x = point.x();
     int y = point.y();
@@ -173,7 +146,6 @@ int GLWidget::isMouseOnPoint(QPoint point){
     }
     return -1;
 }
-
 void GLWidget::mousePressEvent(QMouseEvent *event) {
 //    printf("%d, %d\n", event->x(), event->y());
     int index = isMouseOnPoint(event->pos());
@@ -192,7 +164,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     }
 
 }
-
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
 //    printf("%d, %d\n", event->x(), event->y());
     draggablePoint = -1;
