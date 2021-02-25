@@ -18,37 +18,72 @@ void GLWidget::resizeGL(int w, int h) {
     glLoadIdentity();
 }
 
+double bezier(double A,  // Start value
+              double B,  // First control value
+              double C,  // Second control value
+              double D,  // Ending value
+              double t)  // Parameter 0 <= t <= 1
+{
+    double s = 1 - t;
+    double AB = A*s + B*t;
+    double BC = B*s + C*t;
+    double CD = C*s + D*t;
+    double ABC = AB*s + BC*t;
+    double BCD = BC*s + CD*t;
+    return ABC*s + BCD*t;
+}
+
+void GLWidget::updateSplinePoints() {
+    spline_points.clear();
+    int steps = 100;
+    for (int i = 0; i < steps + 1; i++){
+        double x = bezier(
+                points[0].first,
+                points[1].first,
+                points[2].first,
+                points[3].first,
+                i / static_cast<float>(steps)
+                );
+        double y = bezier(
+                points[0].second,
+                points[1].second,
+                points[2].second,
+                points[3].second,
+                i / static_cast<float>(steps)
+                );
+        spline_points.push_back({x, y});
+    }
+}
+
 void GLWidget::paintGL() {
+    updateSplinePoints();
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glPointSize(10.0f);
+
     glLineWidth(3.0f);
     glEnable(GL_POINT_SMOOTH);
 
     glBegin(GL_LINE_STRIP);
-
     glColor3f(1.0f, 0.0f, 0.0f);
-
     for (const auto &point : points) {
         glVertex2f(point.first, point.second);
     }
+    glEnd();
 
-    glColor3f(0.0f, 1.0f, 0.0f);
-
+    glPointSize(5.0f);
+    glBegin(GL_POINTS);
+    glColor3f(0.0f, 0.0f, 1.0f);
     for (const auto &point : spline_points) {
         glVertex2f(point.first, point.second);
     }
     glEnd();
 
-
+    glPointSize(10.0f);
     glBegin(GL_POINTS);
-
     glColor3f(0.0f, 1.0f, 0.0f);
-
     for (const auto &point : points) {
         glVertex2f(point.first, point.second);
     }
-
     glEnd();
 }
 

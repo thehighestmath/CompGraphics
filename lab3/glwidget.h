@@ -39,9 +39,10 @@ public:
     int isMouseOnPoint(QPoint point);
     GLWidget::mapCoords fromGLCoordsToMap(float x, float y);
     GLWidget::glCoords fromMapCoordsToGL(int x, int y);
+    void updateSplinePoints();
 
     std::vector<std::pair<float, float>> points = {
-        {-1, 1},
+        {-0.9, 0.9},
         {-0.4, 0.5},
         {0.0, 0.0},
         {0.5, 0.4},
