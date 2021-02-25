@@ -1,6 +1,54 @@
 #include <QtGui/QMouseEvent>
 #include "glwidget.h"
 
+template<typename T>
+void printVector(std::vector<std::pair<T, T>> points){
+    for (const auto &point : points) {
+        std::cout << "(" << point.first << ";" << point.second << ") ";
+    }
+    std::cout << std::endl;
+}
+
+
+int _i = 1;
+int _m = 5;
+int steps = 10;
+std::vector<float> w = {1.0, 1.0, 1.0, 1.0, 1.0};
+
+double M_i_1() {
+    return 1.0 * steps;
+}
+
+double M(int i, int m, double t) {
+    if (m == 1) {
+        return M_i_1();
+    }
+    return
+            1.0 * (
+                ((i + m) / static_cast<double>(steps) - t) * M(i + 1, m - 1, t) +
+                (t - i / static_cast<double>(steps)) * M(i, m - 1, t)
+                ) / (
+                m / static_cast<double>(steps)
+                );
+}
+
+double N(int j, int m, double t) {
+    return 1.0 * m / static_cast<double>(steps) * M(j, m, t);
+}
+
+double r(double t, std::vector<float>& p, std::vector<float>& w) {
+
+    double numerator = 0, denominator = 0;
+    for (int j = _i - _m + 1; j <= _i; j++) {
+        std::cout << j + 3 << std::endl;
+        double temp = N(j, _m, t) * w[j + 3];
+        std::cout << "p[j + 3] = " << p[j + 3] << std::endl;
+        numerator += temp * p[j + 3];
+        denominator += temp;
+    }
+//    std::cout << numerator << " "<< denominator << std::endl;
+    return numerator / denominator;
+}
 
 GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
     setMouseTracking(true);
@@ -35,24 +83,31 @@ double bezier(double A,  // Start value
 
 void GLWidget::updateSplinePoints() {
     spline_points.clear();
-    int steps = 100;
-    for (int i = 0; i < steps + 1; i++){
-        double x = bezier(
-                points[0].first,
-                points[1].first,
-                points[2].first,
-                points[3].first,
-                i / static_cast<float>(steps)
-                );
-        double y = bezier(
-                points[0].second,
-                points[1].second,
-                points[2].second,
-                points[3].second,
-                i / static_cast<float>(steps)
-                );
-        spline_points.push_back({x, y});
+    std::vector<float> xPoints;
+    std::vector<float> yPoints;
+    for (const auto &point : points) {
+        xPoints.push_back(point.first);
+        yPoints.push_back(point.second);
     }
+    for (int i = 0; i < steps + 1; i++){
+        double x, y;
+        double t = i / static_cast<float>(steps);
+//        double x = bezier(
+//                points[0].first, points[1].first,
+//                points[2].first, points[3].first,
+//                i / static_cast<float>(steps)
+//                );
+//        double y = bezier(
+//                points[0].second, points[1].second,
+//                points[2].second, points[3].second,
+//                i / static_cast<float>(steps)
+//                );
+        x = r(t, xPoints, w);
+        y = r(t, yPoints, w);
+        spline_points.push_back({x, y});
+//        std::cout << "count of elements is " << spline_points.size() << std:: endl;
+    }
+    printVector(spline_points);
 }
 
 void GLWidget::paintGL() {
@@ -122,7 +177,7 @@ int GLWidget::isMouseOnPoint(QPoint point){
 void GLWidget::mousePressEvent(QMouseEvent *event) {
 //    printf("%d, %d\n", event->x(), event->y());
     int index = isMouseOnPoint(event->pos());
-    std::cout << index << std::endl;
+//    std::cout << index << std::endl;
     draggablePoint = index;
 }
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
