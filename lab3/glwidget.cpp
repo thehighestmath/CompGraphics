@@ -2,25 +2,24 @@
 #include "glwidget.h"
 
 template<typename T>
-void printVector(std::vector<std::pair<T, T>> points){
+void printVector(std::vector<std::pair<T, T>> points) {
     for (const auto &point : points) {
         std::cout << "(" << point.first << ";" << point.second << ") ";
     }
     std::cout << std::endl;
 }
 
-
 // TODO:
-int k = 4;
+int k = 5;
 int n = 4;
 
 int steps = 100;
 
-std::vector<float> h = {2.0, 1.0, 2.0, 1.0, 5.0};
+std::vector<float> h = {2.0, 1.0, 2.0, 2.0, 5.0};
 
 
 double _t(int i) {
-    if (0 <= i && i <= k) {
+    if (0 <= i && i < k) {
         return 0;
     }
     if (k <= i && i <= n) {
@@ -63,7 +62,7 @@ double N(int i, int k, double u) {
 
 double P(double u, std::vector<float> p) {
     double numerator = 0, denominator = 0;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n + 1; i++) {
         double temp = h[i] * N(i, k, u);
         numerator += temp * p[i];
         denominator += temp;
@@ -113,8 +112,9 @@ void GLWidget::paintGL() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glLineWidth(3.0f);
+    glLineWidth(5.0f);
     glEnable(GL_POINT_SMOOTH);
+    glEnable(GL_LINE_SMOOTH);
 
     glBegin(GL_LINE_STRIP);
     glColor3f(1.0f, 0.0f, 0.0f);
@@ -123,8 +123,9 @@ void GLWidget::paintGL() {
     }
     glEnd();
 
-    glPointSize(5.0f);
-    glBegin(GL_POINTS);
+//    glPointSize(5.0f);
+    glLineWidth(3.0f);
+    glBegin(GL_LINE_STRIP);
     glColor3f(0.0f, 0.0f, 1.0f);
     for (const auto &point : spline_points) {
         glVertex2f(point.first, point.second);
