@@ -10,40 +10,62 @@ void printVector(std::vector<std::pair<T, T>> points){
 }
 
 
-int _i = 1;
-int _m = 5;
-int steps = 20;
-std::vector<float> w = {2.0, 1.0, 2.0, 1.0, 5.0};
+// TODO:
+int k = 4;
+int n = 4;
 
-double _t(int i){
-    return 1.0 * i / steps;
-}
+int steps = 100;
 
-double M(int i, double t) {
-    if (_t(i) <= t && t < _t(i + 1)){
-        return _t(i + 1) - _t(i);
+std::vector<float> h = {2.0, 1.0, 2.0, 1.0, 5.0};
+
+
+double _t(int i) {
+    if (0 <= i && i <= k) {
+        return 0;
     }
-//    return 1.0 * steps;
+    if (k <= i && i <= n) {
+        return i - k + 1;
+    }
+    if (n < i && i <= n + k) {
+        return n - k + 2;
+    }
+    std::cerr << "Unreacheble state" << std::endl;
     return 0;
 }
 
-double M(int i, int m, double t) {
-    if (m == 1) {
-        return M(i, t);
+double N(int i, int k, double u) {
+    if (k == 1) {
+        if (_t(i) <= u && u <= _t(i + 1)) {
+            return 1;
+        }
+        return 0;
     }
-    return ((_t(i + m) - t) * M(i + 1, m - 1, t) +
-            (t - _t(i)) * M(i, m - 1, t)) / (_t(m));
+    double num1 = ((u - _t(i)) * N(i, k - 1, u));
+    double den1 = (_t(i + k - 1) - _t(i));
+    double num2 = ((_t(i + k) - u) * N(i + 1, k - 1, u));
+    double den2 = (_t(i + k) - _t(i + 1));
+    double frac1, frac2;
+
+    if (fabs(num1) <= 1e-6 && fabs(den1) <= 1e-6) {
+        frac1 = 0;
+    } else {
+        frac1 = num1 / den1;
+    }
+    if (fabs(num2) <= 1e-6 && fabs(den2) <= 1e-6) {
+        frac2 = 0;
+    } else {
+        frac2 = num2 / den2;
+    }
+
+    return frac1 + frac2;
 }
 
-double N(int j, int m, double t) {
-    return (_t(j + m) - _t(j)) * M(j, m, t);
-}
 
-double r(double t, std::vector<float>& p, std::vector<float>& w) {
+double P(double u, std::vector<float> p) {
     double numerator = 0, denominator = 0;
-    for (int j = _i - _m + 1; j <= _i; j++) {
-        double temp = N(j, _m, t) * w[j + 3];
-        numerator += temp * p[j + 3];
+    for (int i = 0; i < n; i++) {
+        double temp = h[i] * N(i, k, u);
+        numerator += temp * p[i];
         denominator += temp;
     }
 //    std::cout << numerator << " "<< denominator << std::endl;
@@ -64,8 +86,8 @@ void GLWidget::updateSplinePoints() {
         double x, y;
         double t = i / static_cast<float>(steps);
 //        std::cout << t << std::endl;
-        x = r(t, xPoints, w);
-        y = r(t, yPoints, w);
+        x = P(t, xPoints);
+        y = P(t, yPoints);
         spline_points.push_back({x, y});
 //        std::cout << "count of elements is " << spline_points.size() << std:: endl;
     }
