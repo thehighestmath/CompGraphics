@@ -12,15 +12,18 @@ CONFIG += c++11
 #LIBS += -L"/usr/include/GL"
 
 SOURCES += \
+    dialog.cpp \
     glwidget.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    dialog.h \
     glwidget.h \
     mainwindow.h
 
 FORMS += \
+    dialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.

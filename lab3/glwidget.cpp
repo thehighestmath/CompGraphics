@@ -15,7 +15,7 @@ int n = 4;
 
 int steps = 100;
 
-std::vector<float> h = {2.0, 1.0, 2.0, 2.0, 5.0};
+
 
 
 double _t(int i) {
@@ -60,7 +60,7 @@ double N(int i, int k, double u) {
 }
 
 
-double P(double u, std::vector<float> p) {
+double P(double u, std::vector<float> p, std::vector<float>& h) {
     double numerator = 0, denominator = 0;
     for (int i = 0; i < n + 1; i++) {
         double temp = h[i] * N(i, k, u);
@@ -85,8 +85,8 @@ void GLWidget::updateSplinePoints() {
         double x, y;
         double t = i / static_cast<float>(steps);
 //        std::cout << t << std::endl;
-        x = P(t, xPoints);
-        y = P(t, yPoints);
+        x = P(t, xPoints, this->h);
+        y = P(t, yPoints, this->h);
         spline_points.push_back({x, y});
 //        std::cout << "count of elements is " << spline_points.size() << std:: endl;
     }
@@ -94,7 +94,7 @@ void GLWidget::updateSplinePoints() {
 }
 
 
-GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
+GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent), dialog(new Dialog()) {
     setMouseTracking(true);
 }
 void GLWidget::initializeGL() {
@@ -190,4 +190,18 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
 //    printf("%d, %d\n", event->x(), event->y());
     draggablePoint = -1;
+}
+
+void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
+    int index = isMouseOnPoint(event->pos());
+//    std::cout << index << std::endl;
+    draggablePoint = index;
+
+    if (draggablePoint != -1) {
+        this->dialog->setWeight(this->h[draggablePoint]);
+        this->dialog->exec();
+        this->h[draggablePoint] = this->dialog->resultWeight();
+        update();
+        this->mouseReleaseEvent(event);
+    }
 }

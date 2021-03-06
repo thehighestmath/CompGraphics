@@ -10,6 +10,7 @@
 
 #include <GL/glu.h>
 #include <GL/gl.h>
+#include <dialog.h>
 
 class GLWidget : public QGLWidget {
 
@@ -36,6 +37,7 @@ public:
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);
+    void mouseDoubleClickEvent(QMouseEvent *);
     int isMouseOnPoint(QPoint point);
     GLWidget::mapCoords fromGLCoordsToMap(float x, float y);
     GLWidget::glCoords fromMapCoordsToGL(int x, int y);
@@ -50,6 +52,10 @@ public:
     };
 
     std::vector<std::pair<float, float>> spline_points;
+
+    std::vector<float> h = {2.0, 1.0, 2.0, 2.0, 5.0};
+
+    Dialog* dialog = nullptr;
 
     int draggablePoint = -1;
 };
