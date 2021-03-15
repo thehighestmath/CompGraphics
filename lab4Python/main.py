@@ -1,16 +1,14 @@
-import sys
-import random
 import copy
+import random
+import sys
 
+import PyQt5
+import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from PyQt5 import QtGui
-from PyQt5.QtOpenGL import *
-from PyQt5 import QtCore, QtWidgets, QtOpenGL
-import PyQt5
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot
 from numpy.ma import cos, sin
-import numpy as np
 
 ZERO_LEVEL = 200
 
@@ -35,7 +33,6 @@ class Ui_MainWindow(QtWidgets.QWidget):
     @pyqtSlot(int)
     def f_rep_changed(self, value):
         self.widget.spin_box_changed(value)
-        # print(value)
         pass
 
     @pyqtSlot(int)
@@ -55,8 +52,11 @@ class GlWidget(QtWidgets.QOpenGLWidget):
 
         self.a = 0
         self.fractal_depth = 0
-        self.old_rects = [self.create_rectangle(self.width() / 2, self.height() / 2, 0, ZERO_LEVEL, ZERO_LEVEL)]
+        self.old_rects = [
+            self.create_rectangle(self.width() / 2, self.height() / 2, 0, ZERO_LEVEL, ZERO_LEVEL)
+        ]
         self.new_rects = []
+        self.steps = {0: self.old_rects}
 
         glClearColor(0, 0, 0, 0)
         glShadeModel(GL_FLAT)
@@ -66,12 +66,10 @@ class GlWidget(QtWidgets.QOpenGLWidget):
 
     def spin_box_changed(self, val):
         self.fractal_depth = val
-        print(f"val = {val}")
         self.update()
 
     def spin2(self, val):
         self.a = val
-        # print(val)
         self.update()
 
     def get_coordinate(self, coordinate, hh, ww):
@@ -85,7 +83,7 @@ class GlWidget(QtWidgets.QOpenGLWidget):
         theta = - np.pi / 8 + random.uniform(-0.1, 0.1)
         x = r * cos(theta) * x + s * sin(phi) * y + h
         y = -r * sin(theta) * x + s * cos(phi) * y + k
-        return {'x': x + coordinate['x'] - ww/2, 'y': y + coordinate['y'] - hh/2}
+        return {'x': x + coordinate['x'] - ww / 2, 'y': y + coordinate['y'] - hh / 2}
 
     def paint_rectangle(self, rect):
         x = rect['x']
@@ -101,24 +99,47 @@ class GlWidget(QtWidgets.QOpenGLWidget):
 
         glEnd()
 
-    def generator(self, depth):
-        print(depth)
-        if depth == 0:
+    def generator(self):
+        if self.fractal_depth in self.steps:
+            self.old_rects = self.steps[self.fractal_depth]
+            self.new_rects = []
             return
-        #todo уменьшение размеров след квадратов
+        # todo уменьшение размеров след квадратов
         for rect in self.old_rects:
-            self.new_rects.append(self.create_rectangle(rect['x'] * (1 + 61/800), rect['y'] * (1 - 130/800), rect))
-            # coord = self.get_coordinate({'x': rect['x'], 'y': rect['y']}, rect['h'], rect['w'])
-            # self.new_rects.append(self.create_rectangle(coord['x'], coord['y'], rect['a'], rect['h']/2, rect['w']/2))
-            # coord = self.get_coordinate({'x': rect['x'], 'y': rect['y']}, rect['h'], rect['w'])
-            # self.new_rects.append(self.create_rectangle(coord['x'], coord['y'], rect['a'] + 15, rect['h']/2, rect['w']/2))
-            # coord = self.get_coordinate({'x': rect['x'], 'y': rect['y']}, rect['h'], rect['w'])
-            # self.new_rects.append(self.create_rectangle(coord['x'], coord['y'], rect['a'] - 15, rect['h']/2, rect['w']/2))
+            x = rect['x']
+            y = rect['y']
+            h = rect['h']
+            w = rect['w']
 
+            # 3
+            self.new_rects.append(self.create_rectangle(
+                x - w + 2 * w * 72 / 240,
+                y - h + 2 * h * (1 - 55 / 176),
+                67,
+                h * 67 / 176,
+                w * 129 / 240
+            ))
+
+            # 2
+            self.new_rects.append(self.create_rectangle(
+                x - w + 2 * w * 177 / 240,
+                y - h + 2 * h * (1 - 65 / 176),
+                -55,
+                h * 71 / 176,
+                w * 102 / 240
+            ))
+
+            # 1
+            self.new_rects.append(self.create_rectangle(
+                x - w + 2 * w * 117 / 240,
+                y - h + 2 * h * (1 - 110 / 176),
+                0,
+                h * 117 / 176,
+                w * 102 / 240
+            ))
         self.old_rects = copy.deepcopy(self.new_rects)
+        self.steps[self.fractal_depth] = copy.deepcopy(self.new_rects)
         self.new_rects = []
-        print()
-        return
 
     def paintGL(self):
         width = self.width()
@@ -135,9 +156,10 @@ class GlWidget(QtWidgets.QOpenGLWidget):
 
         # todo придумать отображение точек
 
-        print(len(self.old_rects))
-        self.generator(self.fractal_depth)
-
+        self.generator()
+        self.paint_rectangle(
+            self.create_rectangle(self.width() / 2, self.height() / 2, 0, ZERO_LEVEL, ZERO_LEVEL)
+        )
         for rect in self.old_rects:
             self.paint_rectangle(rect)
 
