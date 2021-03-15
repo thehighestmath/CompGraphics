@@ -62,7 +62,7 @@ class GlWidget(QtWidgets.QOpenGLWidget):
         glShadeModel(GL_FLAT)
 
     def create_rectangle(self, x, y, angle, h, w):
-        return {'x': x, 'y': y, 'h': h, 'w': w, 'a': np.pi * angle / 180}
+        return {'x': x, 'y': y, 'h': h, 'w': w, 'a': angle}
 
     def spin_box_changed(self, val):
         self.fractal_depth = val
@@ -72,18 +72,18 @@ class GlWidget(QtWidgets.QOpenGLWidget):
         self.a = val
         self.update()
 
-    def get_coordinate(self, coordinate, hh, ww):
-        r = 0.5
-        s = 0.5
-        h = 0.5
-        k = 0.5
-        x = coordinate['x']
-        y = coordinate['y']
-        phi = np.pi / 8 + random.uniform(-0.1, 0.1)
-        theta = - np.pi / 8 + random.uniform(-0.1, 0.1)
-        x = r * cos(theta) * x + s * sin(phi) * y + h
-        y = -r * sin(theta) * x + s * cos(phi) * y + k
-        return {'x': x + coordinate['x'] - ww / 2, 'y': y + coordinate['y'] - hh / 2}
+    # def get_coordinate(self, coordinate, hh, ww):
+    #     r = 0.5
+    #     s = 0.5
+    #     h = 0.5
+    #     k = 0.5
+    #     x = coordinate['x']
+    #     y = coordinate['y']
+    #     phi = np.pi / 8 + random.uniform(-0.1, 0.1)
+    #     theta = - np.pi / 8 + random.uniform(-0.1, 0.1)
+    #     x = r * cos(theta) * x + s * sin(phi) * y + h
+    #     y = -r * sin(theta) * x + s * cos(phi) * y + k
+    #     return {'x': x + coordinate['x'] - ww / 2, 'y': y + coordinate['y'] - hh / 2}
 
     def paint_rectangle(self, rect):
         x = rect['x']
@@ -110,12 +110,13 @@ class GlWidget(QtWidgets.QOpenGLWidget):
             y = rect['y']
             h = rect['h']
             w = rect['w']
+            a = rect['a']
 
             # 3
             self.new_rects.append(self.create_rectangle(
                 x - w + 2 * w * 72 / 240,
                 y - h + 2 * h * (1 - 55 / 176),
-                67,
+                a + np.pi / 12,
                 h * 67 / 176,
                 w * 129 / 240
             ))
@@ -124,7 +125,7 @@ class GlWidget(QtWidgets.QOpenGLWidget):
             self.new_rects.append(self.create_rectangle(
                 x - w + 2 * w * 177 / 240,
                 y - h + 2 * h * (1 - 65 / 176),
-                -55,
+                a + -np.pi / 8,
                 h * 71 / 176,
                 w * 102 / 240
             ))
@@ -132,8 +133,8 @@ class GlWidget(QtWidgets.QOpenGLWidget):
             # 1
             self.new_rects.append(self.create_rectangle(
                 x - w + 2 * w * 117 / 240,
-                y - h + 2 * h * (1 - 110 / 176),
-                0,
+                y - h + 2 * h * (1 - 120 / 176),
+                a + 0,
                 h * 117 / 176,
                 w * 102 / 240
             ))
@@ -157,9 +158,6 @@ class GlWidget(QtWidgets.QOpenGLWidget):
         # todo придумать отображение точек
 
         self.generator()
-        self.paint_rectangle(
-            self.create_rectangle(self.width() / 2, self.height() / 2, 0, ZERO_LEVEL, ZERO_LEVEL)
-        )
         for rect in self.old_rects:
             self.paint_rectangle(rect)
 
