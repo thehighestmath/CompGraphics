@@ -1,5 +1,6 @@
 import sys
 import random
+import copy
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -9,13 +10,15 @@ from PyQt5 import QtCore, QtWidgets, QtOpenGL
 import PyQt5
 from PyQt5.QtCore import pyqtSlot
 from numpy.ma import cos, sin
-import numpy
+import numpy as np
+
+ZERO_LEVEL = 200
 
 
 class Ui_MainWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Ui_MainWindow, self).__init__()
-        self.widget = glWidget()
+        self.widget = GlWidget()
         self.spinbox = PyQt5.QtWidgets.QSpinBox(self)
         self.spinbox.setRange(0, 5)
         self.spinbox1 = PyQt5.QtWidgets.QSpinBox(self)
@@ -27,11 +30,13 @@ class Ui_MainWindow(QtWidgets.QWidget):
 
         self.setLayout(main_layout)
         self.connect_signals()
-        self.setFixedSize(800, 600)
+        self.setFixedSize(800, 800)
 
     @pyqtSlot(int)
     def f_rep_changed(self, value):
-        print(value)
+        self.widget.spin_box_changed(value)
+        # print(value)
+        pass
 
     @pyqtSlot(int)
     def f_rep_changed1(self, value):
@@ -42,36 +47,45 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.spinbox1.valueChanged.connect(self.f_rep_changed1)
 
 
-class glWidget(QtWidgets.QOpenGLWidget):
+class GlWidget(QtWidgets.QOpenGLWidget):
     def __init__(self, parent=None):
         QtWidgets.QOpenGLWidget.__init__(self, parent)
-        self.setFixedSize(640, 480)
+        self.setFixedSize(640, 640)
         self.setMouseTracking(True)
 
         self.a = 0
+        self.fractal_depth = 0
+        self.old_rects = [self.create_rectangle(self.width() / 2, self.height() / 2, 0, ZERO_LEVEL, ZERO_LEVEL)]
+        self.new_rects = []
+
         glClearColor(0, 0, 0, 0)
         glShadeModel(GL_FLAT)
 
-    def spinBoxChanged(self, val):
-        self.fractalDepth = val
-        print(val)
+    def create_rectangle(self, x, y, angle, h, w):
+        return {'x': x, 'y': y, 'h': h, 'w': w, 'a': np.pi * angle / 180}
+
+    def spin_box_changed(self, val):
+        self.fractal_depth = val
+        print(f"val = {val}")
         self.update()
 
     def spin2(self, val):
         self.a = val
-        print(val)
+        # print(val)
         self.update()
 
-    def getCoordinate(self, coordinate):
-        r = random.random()
-        s = random.random()
-        h = random.random()
-        k = random.random()
-        phi = numpy.pi / 8 + random.uniform(-0.1, 0.1)
-        theta = numpy.pi / 8 + random.uniform(-0.1, 0.1)
-        x = r * cos(theta) * coordinate.x + s * sin(phi) * coordinate.y + h
-        y = -r * sin(theta) * coordinate.x + s * cos(phi) * coordinate.y + k
-        return x, y
+    def get_coordinate(self, coordinate, hh, ww):
+        r = 0.5
+        s = 0.5
+        h = 0.5
+        k = 0.5
+        x = coordinate['x']
+        y = coordinate['y']
+        phi = np.pi / 8 + random.uniform(-0.1, 0.1)
+        theta = - np.pi / 8 + random.uniform(-0.1, 0.1)
+        x = r * cos(theta) * x + s * sin(phi) * y + h
+        y = -r * sin(theta) * x + s * cos(phi) * y + k
+        return {'x': x + coordinate['x'] - ww/2, 'y': y + coordinate['y'] - hh/2}
 
     def paint_rectangle(self, rect):
         x = rect['x']
@@ -87,6 +101,25 @@ class glWidget(QtWidgets.QOpenGLWidget):
 
         glEnd()
 
+    def generator(self, depth):
+        print(depth)
+        if depth == 0:
+            return
+        #todo уменьшение размеров след квадратов
+        for rect in self.old_rects:
+            self.new_rects.append(self.create_rectangle(rect['x'] * (1 + 61/800), rect['y'] * (1 - 130/800), rect))
+            # coord = self.get_coordinate({'x': rect['x'], 'y': rect['y']}, rect['h'], rect['w'])
+            # self.new_rects.append(self.create_rectangle(coord['x'], coord['y'], rect['a'], rect['h']/2, rect['w']/2))
+            # coord = self.get_coordinate({'x': rect['x'], 'y': rect['y']}, rect['h'], rect['w'])
+            # self.new_rects.append(self.create_rectangle(coord['x'], coord['y'], rect['a'] + 15, rect['h']/2, rect['w']/2))
+            # coord = self.get_coordinate({'x': rect['x'], 'y': rect['y']}, rect['h'], rect['w'])
+            # self.new_rects.append(self.create_rectangle(coord['x'], coord['y'], rect['a'] - 15, rect['h']/2, rect['w']/2))
+
+        self.old_rects = copy.deepcopy(self.new_rects)
+        self.new_rects = []
+        print()
+        return
+
     def paintGL(self):
         width = self.width()
         height = self.height()
@@ -100,8 +133,14 @@ class glWidget(QtWidgets.QOpenGLWidget):
 
         glEnable(GL_POINT_SMOOTH)
 
-        self.paint_rectangle({'x': 400, 'y': 240, 'h': 50, 'w': 100, 'a': numpy.pi * self.a / 180})
-        
+        # todo придумать отображение точек
+
+        print(len(self.old_rects))
+        self.generator(self.fractal_depth)
+
+        for rect in self.old_rects:
+            self.paint_rectangle(rect)
+
         glFlush()
 
     def initializeGL(self):
