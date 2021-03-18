@@ -16,6 +16,11 @@ def create_shader(shader_type, source):
     glShaderSource(shader, source)
     # Компилируем шейдер
     glCompileShader(shader)
+    status = glGetShaderiv(shader, GL_COMPILE_STATUS)
+    if not status:
+        glGetShaderInfoLog
+        # We could show more useful info here, but that takes a few lines
+        raise RuntimeError('Shader did not compile.')
     # Возвращаем созданный шейдер
     return shader
 
@@ -43,7 +48,7 @@ def draw():
     glDisableClientState(GL_VERTEX_ARRAY)  # Отключаем использование массива вершин
     # glDisableClientState(GL_COLOR_ARRAY)  # Отключаем использование массива цветов
     glutSwapBuffers()  # Выводим все нарисованное в памяти на экран
-    # glRotatef(1, 0, 0, 1)
+    glRotatef(1, 0, 0, 1)
 
 
 def main():
