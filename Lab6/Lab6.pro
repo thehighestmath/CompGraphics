@@ -15,7 +15,7 @@ LIBS += -lGLU
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    glwidget.cpp
+        glwidget.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h
