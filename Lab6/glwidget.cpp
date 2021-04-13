@@ -1,5 +1,7 @@
 #include "glwidget.h"
-
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
 template<typename T>
 void printArr(T arr, int size){
     for (int i = 0; i < size; i++) {
@@ -57,30 +59,53 @@ void GLWidget::draw() {
 //    m_program->setUniformValue(m_colAttr, 0.5f, 0.7f, 1.0f, 1.0f);
 
 
-    //круги
-    int countCircles = 5;
-    int lenght = countCircles * 3;
-    int countSteps = 19;
+    // гипердолоид
+    /*
+    x = x0 + a*ch(u) * cos(v)
+    y = y0 + b*sh(u) * sin(v)
+    z = z0 + c*sh(u)
+    v [0; 2pi) == t
+    u (-inf; +inf)
+    */
 
-    GLfloat vec[lenght];
-    GLfloat totalPoints[countSteps * 3 * countCircles + countSteps * 3 * (countCircles - 2)];
+    //круги
+    int countCircles = 7;
+    int countSteps = 47;
+    float u;
+    GLfloat vec[countCircles * 3 ];
+    GLfloat totalPoints[(countSteps * 3 * countCircles + countSteps * 3 * (countCircles - 2))];
     int j = 0;
     for (double t = 0; t < 2 * M_PI; t += 2.0 * M_PI / countSteps) {
         m_program->setUniformValue(m_colAttr, t / 2 / M_PI, t / 2 / M_PI, 1.0f, 1.0f);
         // Работает
-        for (int i = 0; i <= lenght - 3; i += 3) {
-            vec[i] = R / (2.0 + i * 0.25) * qCos(t) + 0.1 * qCos(t);
-            vec[i + 1] = -size * 1.5f + (10.25 + i * 0.5f);
-            vec[i + 2] = size / 1.15f - R / (2.0 + i * 0.25) * qSin(t);
+        for (int i = 0; i < countCircles; i += 1) {
+            if (i != 0){
+                if (i > countCircles){
+                    u = -log(i - countCircles);
+                } else {
+                    u = log(i);
+                }
+            } else {
+                u = 0;
+            }
+            // old way
+//            vec[3 * i] = R / (2.0 + 3 *  i * 0.25) * qCos(t) + 0.1 * qCos(t);
+//            vec[3 * i + 1] = -size * 1.5f + (10.25 + 3 * i * 0.5f);
+//            vec[3 * i + 2] = size / 1.15f - R / (2.0 + 3 * i * 0.25) * qSin(t);
 
-            totalPoints[j] = vec[i];
-            totalPoints[j + 1] = vec[i + 1];
-            totalPoints[j + 2] = vec[i + 2];
+            // trying new way
+            vec[3 * i] = x0 + R * cosh(u) * cos(t);
+            vec[3 * i + 1] = y0 + R * sinh(u) * sin(t);
+            vec[3 * i + 2] = z0 + R * sinh(u);
+
+            totalPoints[j] = vec[3 * i];
+            totalPoints[j + 1] = vec[3 * i + 1];
+            totalPoints[j + 2] = vec[3 * i + 2];
             j += 3;
-            if (i != 0 && i != lenght - 3){
-                totalPoints[j] = vec[i];
-                totalPoints[j + 1] = vec[i + 1];
-                totalPoints[j + 2] = vec[i + 2];
+            if (i != 0 && i != countCircles - 1){
+                totalPoints[j] = vec[3 * i];
+                totalPoints[j + 1] = vec[3 * i + 1];
+                totalPoints[j + 2] = vec[3 * i + 2];
                 j += 3;
             }
         }
@@ -94,10 +119,11 @@ void GLWidget::draw() {
 
     glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, totalPoints);
     glEnableVertexAttribArray(m_posAttr);
-//    glDrawArrays(GL_LINES, 0, countSteps * 3 * countCircles + countSteps * 3 * (countCircles - 2));
     glDrawArrays(GL_LINES, 0, countSteps * countCircles + countSteps * (countCircles - 2));
     glDisableVertexAttribArray(m_posAttr);
     m_program->setUniformValue(m_colAttr, 0.5f, 0.7f, 1.0f, 1.0f);
+
+
     m_program->release();
 }
 

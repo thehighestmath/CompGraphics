@@ -23,6 +23,13 @@ private:
     GLuint m_colAttr;
     GLuint m_matrixUniform;
     QOpenGLShaderProgram *m_program;
+
+    float x0 = 0;
+    float y0 = 0;
+    float z0 = 1;
+    float a = 1;
+    float b = 1;
+    float c = 1;
 public:
     explicit GLWidget(QWidget *parent = 0);
 
