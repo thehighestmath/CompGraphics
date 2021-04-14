@@ -52,6 +52,7 @@ void GLWidget::draw() {
             0.0f, 0.0f, -10.0f,
             0.0f, 0.0f, 10.0f
     };
+    // xyz оси
 //    glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vect);
 //    glEnableVertexAttribArray(m_posAttr);
 //    glDrawArrays(GL_LINES, 0, 6);
@@ -75,6 +76,38 @@ void GLWidget::draw() {
     GLfloat vec[countCircles * 3 ];
     GLfloat totalPoints[(countSteps * 3 * countCircles + countSteps * 3 * (countCircles - 2))];
     int j = 0;
+    for (double t = 0; t < 2 * M_PI; t += 2.0 * M_PI / countSteps / 100) {
+        m_program->setUniformValue(m_colAttr, t / 2 / M_PI, t / 2 / M_PI, 1.0f, 1.0f);
+        // Работает
+        for (int i = 0; i < countCircles; i += 1) {
+            if (i != 0){
+                if (i > countCircles){
+                    u = -log(i - countCircles);
+                } else {
+                    u = log(i);
+                }
+            } else {
+                u = 0;
+            }
+            // old way
+//            vec[3 * i] = R / (2.0 + 3 *  i * 0.25) * qCos(t) + 0.1 * qCos(t);
+//            vec[3 * i + 1] = -size * 1.5f + (10.25 + 3 * i * 0.5f);
+//            vec[3 * i + 2] = size / 1.15f - R / (2.0 + 3 * i * 0.25) * qSin(t);
+
+            // trying new way
+            vec[3 * i] = x0 + R * cosh(u) * cos(t);
+            vec[3 * i + 1] = y0 + R * sinh(u) * sin(t);
+            vec[3 * i + 2] = z0 + R * sinh(u);
+        }
+
+        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vec);
+        glEnableVertexAttribArray(m_posAttr);
+        glDrawArrays(GL_POINTS, 0, countCircles);
+        glDisableVertexAttribArray(m_posAttr);
+    }
+
+    //линии
+    j = 0;
     for (double t = 0; t < 2 * M_PI; t += 2.0 * M_PI / countSteps) {
         m_program->setUniformValue(m_colAttr, t / 2 / M_PI, t / 2 / M_PI, 1.0f, 1.0f);
         // Работает
@@ -109,12 +142,6 @@ void GLWidget::draw() {
                 j += 3;
             }
         }
-
-        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vec);
-        glEnableVertexAttribArray(m_posAttr);
-        glDrawArrays(GL_POINTS, 0, countCircles);
-        glDisableVertexAttribArray(m_posAttr);
-
     }
 
     glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, totalPoints);
@@ -122,7 +149,6 @@ void GLWidget::draw() {
     glDrawArrays(GL_LINES, 0, countSteps * countCircles + countSteps * (countCircles - 2));
     glDisableVertexAttribArray(m_posAttr);
     m_program->setUniformValue(m_colAttr, 0.5f, 0.7f, 1.0f, 1.0f);
-
 
     m_program->release();
 }
