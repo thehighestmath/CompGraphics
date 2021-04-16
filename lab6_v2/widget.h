@@ -47,6 +47,7 @@ protected:
     void initStairs(QVector3D centerTop, QVector3D centerBottom, double width, double delta = 0.1);
     void initStairs(QVector3D centerTop, double width, double height, double side, double delta, double angle);
     void initBarrel(double leftOffset, double delta);
+    void initHyperboloid(QVector3D center, double R, double delta = 0.1);
 
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent* event);

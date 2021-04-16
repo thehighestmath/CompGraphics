@@ -17,6 +17,8 @@ public:
     static SimpleObject3D *initSquareBelt(const QImage &texture, QVector3D center1, double w1, double h1, QVector3D center2, double w2, double h2);
     static SimpleObject3D *initStair(const QImage &texture, QVector3D center1, QVector3D center2, double r1, double r2, double step = 0.1);
 
+    static SimpleObject3D *initHyperboloid(const QImage &texture, QVector3D center1, QVector3D center2, double r1, double r2, double step = 0.1);
+
 };
 
 #endif // FIGUREBUILDER_H

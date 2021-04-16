@@ -164,7 +164,6 @@ SimpleObject3D *FigureBuilder::initDiskSector(const QImage &texture, QVector3D p
 
 SimpleObject3D *FigureBuilder::initBelt(const QImage &texture, QVector3D center1, QVector3D center2, double r1, double r2, double step)
 {
-
     double zNormal;
     double delta = r2 - r1;
     if(delta > 0)
