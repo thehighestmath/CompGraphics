@@ -38,6 +38,14 @@ protected:
     void resizeGL(int w, int h);
     void paintGL();
     void draw();
+    void initShaders();
+    void initSandGlass();
+    void initWoodenWheel();
+    void initSandGlass2(double lowerBound = -1.0, double upperBound = 1.0, double c = 1.0, double delta = 0.1);
+    void initBook(QVector3D centerTop, QVector3D centerBottom, double sideX, double sideY, double delta = 0.1);
+    void initSimpleBook(const QImage &texture, QVector3D centerTop, QVector3D centerBottom, double sideX, double sideY, double delta = 0.1);
+    void initStairs(QVector3D centerTop, QVector3D centerBottom, double width, double delta = 0.1);
+    void initStairs(QVector3D centerTop, double width, double height, double side, double delta, double angle);
     void initBarrel(double leftOffset, double delta);
 
     void mousePressEvent(QMouseEvent *event);
@@ -45,8 +53,6 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void timerEvent(QTimerEvent *event);
     void keyPressEvent(QKeyEvent *event);
-
-    void initShaders();
 
 private:
     // матрица проекции
