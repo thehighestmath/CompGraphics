@@ -297,7 +297,11 @@ void Widget::initShaders()
     m_colAttr = m_program->uniformLocation( "colAttr" );
     m_matrixUniform = m_program->uniformLocation( "matrix" );
 
-    m_projectionMatrix.ortho(-12.0f,12.0f,-12.0f,12.0f,-12.0f,12.0f);
+    // TODO
+//    m_projectionMatrix.ortho(-12.0f,12.0f,-12.0f,12.0f,-12.0f,12.0f);
+    m_projectionMatrix.perspective(-12.0f,12.0f,-0.0f,-0.0f);
+//    gluPerspective();
+//    glOrtho()
 
     glEnable(GL_PROGRAM_POINT_SIZE);
 }
@@ -306,7 +310,7 @@ void Widget::initWoodenWheel()
 {
     m_groups.push_back(QSharedPointer<Group3D>(new Group3D()));
 
-    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), QVector3D(0.0, 0.0, 0.0), 1, 2 * M_PI));
+//    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), QVector3D(0.0, 0.0, 0.0), 1, 2 * M_PI));
 
     QVector3D center1 = QVector3D(0.0, 0.0, 0.0);
     QVector3D center2 = QVector3D(0.0, 0.0, -0.25);
@@ -327,7 +331,7 @@ void Widget::initWoodenWheel()
     r2 = 1;
     m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), center1, center2, r1, r2, step));
 
-    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center2, r2, 2 * M_PI, 0.1, true));
+//    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center2, r2, 2 * M_PI, 0.1, true));
 
     m_transformObjects.append(m_groups.last());
 }
@@ -454,16 +458,16 @@ void Widget::initSandGlass2(double lowerBound, double upperBound, double c, doub
 
         QVector3D center1 = QVector3D(0.0, 0.0, curvePoints[i].z());
         QVector3D center2 = QVector3D(0.0, 0.0, curvePoints[i + 1].z());
-//        m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/paper2.jpg"), center2, center1, r2, r1));
+        m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/paper2.jpg"), center2, center1, r2, r1));
     }
 
     // рисуем верх и низ часов
     double r = curvePoints.first().x();
     QVector3D center1 = QVector3D(0.0, 0.0, curvePoints.first().z());
-//    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/paper2.jpg"), center1, r, 2 * M_PI, 0.1, true));
+    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/paper2.jpg"), center1, r, 2 * M_PI, 0.1, true));
     r = curvePoints.last().x();
-//    center1 = QVector3D(0.0, 0.0, curvePoints.last().z());
-//    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/paper2.jpg"), center1, r, 2 * M_PI, 0.1, false));
+    center1 = QVector3D(0.0, 0.0, curvePoints.last().z());
+    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/paper2.jpg"), center1, r, 2 * M_PI, 0.1, false));
 
     // рисуем каркас вокруг часов
     r = curvePoints.first().x() * 2;
@@ -471,36 +475,36 @@ void Widget::initSandGlass2(double lowerBound, double upperBound, double c, doub
     QVector3D center2 = center1;
     center2.setZ(center1.z() - 0.01);
     m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), center1, center2, r, r, 0.01));
-//    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center1, r, 2 * M_PI, 0.01, false));
-//    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center2, r * 0.5f, 2 * M_PI, 0.01, true));
+    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center1, r, 2 * M_PI, 0.01, false));
+    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center2, r * 0.5f, 2 * M_PI, 0.01, true));
 
     r = curvePoints.last().x() * 2;
     center1 = QVector3D(0.0, 0.0, curvePoints.last().z());
     center2 = center1;
     center2.setZ(center1.z() + 0.25);
-//    m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), center2, center1, r, r, 0.1));
-//    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center1, r, 2 * M_PI, 0.1, true));
-//    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center2, r, 2 * M_PI, 0.1, false));
+    m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), center2, center1, r, r, 0.1));
+    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center1, r, 2 * M_PI, 0.1, true));
+    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), center2, r, 2 * M_PI, 0.1, false));
 
     double offset = 0.1;
     r = 0.05;
     // поддержки между основаниями
-//    center1 = QVector3D(curvePoints.last().x() + offset, curvePoints.last().x() + offset, curvePoints.last().z());
-//    center2 = QVector3D(curvePoints.first().x() + offset, curvePoints.first().x() + offset, curvePoints.first().z());
-//    SimpleObject3D* obj = FigureBuilder::initBelt(QImage(":/123.jpg"), center2, center1, r, r, 0.1);
-//    m_groups.last()->addObject(obj);
+    center1 = QVector3D(curvePoints.last().x() + offset, curvePoints.last().x() + offset, curvePoints.last().z());
+    center2 = QVector3D(curvePoints.first().x() + offset, curvePoints.first().x() + offset, curvePoints.first().z());
+    SimpleObject3D* obj = FigureBuilder::initBelt(QImage(":/123.jpg"), center2, center1, r, r, 0.1);
+    m_groups.last()->addObject(obj);
 
-//    center1 = QVector3D(curvePoints.last().x() + offset, curvePoints.last().x() + offset, curvePoints.last().z());
-//    center2 = QVector3D(curvePoints.first().x() + offset, curvePoints.first().x() + offset, curvePoints.first().z());
-//    obj = FigureBuilder::initBelt(QImage(":/123.jpg"), center2, center1, r, r, 0.1);
-//    obj->rotate(QQuaternion::fromAxisAndAngle(0.0, 0.0, 1.0, 120));
-//    m_groups.last()->addObject(obj);
+    center1 = QVector3D(curvePoints.last().x() + offset, curvePoints.last().x() + offset, curvePoints.last().z());
+    center2 = QVector3D(curvePoints.first().x() + offset, curvePoints.first().x() + offset, curvePoints.first().z());
+    obj = FigureBuilder::initBelt(QImage(":/123.jpg"), center2, center1, r, r, 0.1);
+    obj->rotate(QQuaternion::fromAxisAndAngle(0.0, 0.0, 1.0, 120));
+    m_groups.last()->addObject(obj);
 
-//    center1 = QVector3D(curvePoints.last().x() + offset, curvePoints.last().x() + offset, curvePoints.last().z());
-//    center2 = QVector3D(curvePoints.first().x() + offset, curvePoints.first().x() + offset, curvePoints.first().z());
-//    obj = FigureBuilder::initBelt(QImage(":/123.jpg"), center2, center1, r, r, 0.1);
-//    obj->rotate(QQuaternion::fromAxisAndAngle(0.0, 0.0, 1.0, -120));
-//    m_groups.last()->addObject(obj);
+    center1 = QVector3D(curvePoints.last().x() + offset, curvePoints.last().x() + offset, curvePoints.last().z());
+    center2 = QVector3D(curvePoints.first().x() + offset, curvePoints.first().x() + offset, curvePoints.first().z());
+    obj = FigureBuilder::initBelt(QImage(":/123.jpg"), center2, center1, r, r, 0.1);
+    obj->rotate(QQuaternion::fromAxisAndAngle(0.0, 0.0, 1.0, -120));
+    m_groups.last()->addObject(obj);
 
     m_transformObjects.append(m_groups.last());
 }
@@ -827,21 +831,51 @@ void Widget::initHyperboloid(QVector3D center, double R, double delta) {
 
 
     int countCircles = 7;
+    countSteps = 20;
 
     QVector3D center1 = QVector3D(0.0, 0.0, 0.0);
     double r = R;
-    r = R;
-
     QVector3D center2 = center1;
     center2.setZ(center1.z() - 0.01);
     int height = countCircles;
-    int beulifulConst = 7;
+    float beulifulConst = 8;
+    QList<QVector3D> normal, back;
     // рисование кругов
     for (int i = 0; i < countCircles; i++) {
-        m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), QVector3D(0.0, 0.0, i - beulifulConst), QVector3D(0.0, 0.0, i+0.1f - beulifulConst), r/(i+1), r/(i+1), 0.01));
-        m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), QVector3D(0.0, 0.0, 2*height - i - 0.5f - beulifulConst), QVector3D(0.0, 0.0, 2*height - i+0.1f- 0.5f - beulifulConst), r/(i+1), r/(i+1), 0.01));
+        center1 = QVector3D(0.0, 0.0, i - beulifulConst);
+        center2 = QVector3D(0.0, 0.0, i+0.05f - beulifulConst);
+        double r1 = r/(i+1);
+        double r2 = r/(i+2);
+        //
+        m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), center1, center2, r/(i+1), r/(i+1), 0.01));
+
+        for (double t = 0; t < 2 * M_PI; t += 2.0 * M_PI / countSteps) {
+            m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"),
+                                                               QVector3D(center1.x() + r1 * cos(t), center1.y() + r1 * sin(t), center1.z()),
+                                                               QVector3D(center2.x() + r2 * cos(t), center2.y() + r2 * sin(t), center2.z() + 1),
+                                                               0.01, 0.01, 0.01));
+        }
+
+        center1 = QVector3D(0.0, 0.0, 2 * height - i - 0.2f - beulifulConst);
+        center2 =  QVector3D(0.0, 0.0, 2 * height - i + 0.05f - 0.2f - beulifulConst);
+        m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), center1, center2, r/(i+1), r/(i+1), 0.01));
+        for (double t = 0; t < 2 * M_PI; t += 2.0 * M_PI / countSteps) {
+            m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"),
+                                                               QVector3D(center1.x() + r1 * cos(t), center1.y() + r1 * sin(t), center1.z()),
+                                                               QVector3D(center2.x() + r2 * cos(t), center2.y() + r2 * sin(t), center2.z() - 1),
+                                                               0.01, 0.01, 0.01));
+        }
         std::cout << i << std::endl;
+
+        if (i == countCircles - 1) {
+            center1 = QVector3D(0.0, 0.0, 2 * height - i - 0.2f - beulifulConst - 1);
+            center2 =  QVector3D(0.0, 0.0, 2 * height - i + 0.05f - 0.2f - beulifulConst - 1);
+            m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), center1, center2, r/(i+1), r/(i+1), 0.01));
+
+        }
     }
+
+    m_groups.last()->addObject(FigureBuilder::initLine(QImage(":/123.jpg"), QVector3D(1, 0.0, 0), QVector3D(0.0, 3, 5), r));
 
 
     m_transformObjects.append(m_groups.last());

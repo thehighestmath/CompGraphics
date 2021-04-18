@@ -735,3 +735,23 @@ SimpleObject3D *FigureBuilder::initStair(const QImage &texture, QVector3D center
 
     return new SimpleObject3D(vertexes, indexes, texture);
 }
+
+SimpleObject3D *FigureBuilder::initLine(const QImage &texture, QVector3D center1, QVector3D center2, double r) {
+    QVector<VertexData> vertexes;
+    QVector<GLuint> indexes;
+//    QVector3D normal = QVector3D(0.0f, 0.0f, 1.0f);
+    vertexes.push_back(VertexData(center1,
+                                  QVector2D(0, 0)
+                                  ,QVector3D(0, 0, 1)));
+    vertexes.push_back(VertexData(center2,
+                                  QVector2D(0, 0),
+                                  QVector3D(0, 0, 1)));
+    indexes.append(0);
+    indexes.append(1);
+//    glBegin(GL_LINES);
+//      glVertex3f(0.0f, 0.0f, 0.0f);
+//      glVertex3f(50.0f, 50.0f, 50.0f);
+//    glEnd();
+    std::cout << "draw\n";
+    return new SimpleObject3D(vertexes, indexes, texture);
+}
