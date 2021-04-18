@@ -59,11 +59,17 @@ MainWindow::MainWindow(QWidget *parent) :
     labelR = new QLabel("R", this);
     labelR->setGeometry(610, 210, 25, 10);
 
+    check = new QCheckBox(this);
+    check->setText("setOrtho");
+    check->setGeometry(620, 250, 150, 30);
+
+
     QObject::connect(sliderX, SIGNAL(valueChanged(int)), glWidget, SLOT(getX(int)));
     QObject::connect(sliderY, SIGNAL(valueChanged(int)), glWidget, SLOT(getY(int)));
     QObject::connect(sliderZ, SIGNAL(valueChanged(int)), glWidget, SLOT(getZ(int)));
     QObject::connect(sliderSize, SIGNAL(valueChanged(int)), glWidget, SLOT(getSize(int)));
     QObject::connect(sliderR, SIGNAL(valueChanged(int)), glWidget, SLOT(getR(int)));
+    QObject::connect(check, SIGNAL(stateChanged(int)), glWidget, SLOT(changeProection()));
 }
 
 MainWindow::~MainWindow()

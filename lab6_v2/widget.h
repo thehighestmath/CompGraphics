@@ -91,10 +91,11 @@ private:
     float R = 4.0f;
     int pred[3] = {0, 0, 0};
     int countSteps;
+    bool proection = false;
 
 private
     slots:
-            void getX(int);
+    void getX(int);
 
     void getY(int);
 
@@ -103,6 +104,8 @@ private
     void getSize(int);
 
     void getR(int);
+
+    void changeProection();
 
 };
 

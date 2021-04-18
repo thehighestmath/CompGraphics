@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <widget.h>
 #include <QSlider>
+#include <QCheckBox>
 #include <QLabel>
 
 namespace Ui {
@@ -32,6 +33,7 @@ private:
     QSlider *sliderZ;
     QSlider *sliderSize;
     QSlider *sliderR;
+    QCheckBox *check;
 };
 
 #endif // MAINWINDOW_H
