@@ -79,7 +79,6 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
 
     float angle = diff.length() / 2.0;
 
-    // вектор, вокруг которого выполняется поворот, перпендикулярен направлению движения мыши
     QVector3D axis = QVector3D(diff.y(), diff.x(), 0.0);
 
     m_camera->rotate(QQuaternion::fromAxisAndAngle(axis, angle));
@@ -144,11 +143,7 @@ void Widget::initShaders()
     m_colAttr = m_program->uniformLocation( "colAttr" );
     m_matrixUniform = m_program->uniformLocation( "matrix" );
 
-    // TODO
-//    m_projectionMatrix.ortho(-12.0f,12.0f,-12.0f,12.0f,-12.0f,50.0f);
-        changeProection();
-        //    gluPerspective();
-//    glOrtho()
+    changeProection();
 
     glEnable(GL_PROGRAM_POINT_SIZE);
 }
