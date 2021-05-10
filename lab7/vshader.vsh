@@ -5,10 +5,12 @@ attribute highp vec3 a_normal;
 uniform highp mat4 u_projectionMatrix;
 uniform highp mat4 u_viewMatrix;
 uniform highp mat4 u_modelMatrix;
+uniform float u_ambident;
 
 varying highp vec2 v_texcoord;
 varying highp vec3 v_normal;
 varying highp vec4 v_position;
+
 
 void main(void)
 {

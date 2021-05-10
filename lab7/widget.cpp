@@ -53,6 +53,7 @@ void Widget::paintGL()
     m_program->setUniformValue("u_projectionMatrix", m_projectionMatrix);
     m_program->setUniformValue("u_lightPosition", QVector4D(50.0, 0.0, 0.0, 1.0));
     m_program->setUniformValue("u_lightPower", 1.0f);
+    m_program->setUniformValue("u_ambident", 0.8f);
 
     m_camera->draw(m_program);
 
