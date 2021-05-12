@@ -381,13 +381,6 @@ SimpleObject3D *FigureBuilder::initCylinder(QVector3D center1, QVector3D center2
         indexes.push_back(disk2FirstIndex + i);
     }
 
-
-    /*for(int i = 0 ; i < vertexes.size(); i++)
-    {
-        qDebug() << "#" << i << vertexes[i].position << vertexes[i].texCoords << vertexes[i].normal;
-    }
-    qDebug() << indexes;*/
-
     return new SimpleObject3D(vertexes, indexes, QImage(":/1.jpg"));
 }
 

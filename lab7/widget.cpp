@@ -54,6 +54,7 @@ void Widget::paintGL()
 
     m_program->setUniformValue("u_lightPosition", QVector4D(this->xLight, this->yLight, this->zLight, 1.0));
     m_program->setUniformValue("u_lightPower", this->ambient/100);
+    m_program->setUniformValue("u_ambident", 0.8f);
 
     m_camera->draw(m_program);
 
