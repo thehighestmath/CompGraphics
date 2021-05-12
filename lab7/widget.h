@@ -32,6 +32,7 @@ public:
     Widget(QWidget *parent = 0);
     ~Widget();
 
+
 protected:
     void initializeGL();
     void resizeGL(int w, int h);
@@ -85,6 +86,10 @@ private:
     float x0 = 0;
     float y0 = 0;
     float z0 = 1;
+    float xLight = 0;
+    float yLight = 0;
+    float zLight = 0;
+    float ambient = 1.0f;
     float a = 1;
     float b = 1;
     float c = 1;
@@ -107,6 +112,15 @@ private
     void getR(int);
 
     void changeProection();
+
+    void setLightX(int);
+
+    void setLightY(int);
+
+    void setLightZ(int);
+
+    void setLightAmbient(int);
+
 
 };
 

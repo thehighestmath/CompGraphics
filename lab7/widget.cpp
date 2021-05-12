@@ -28,8 +28,8 @@ void Widget::initializeGL()
 
     initShaders();
     initSandGlass2(-1.0, 1.0, 0.9, precision);
-        initBook(QVector3D(0.0, 0.0, -1.4), QVector3D(0.0, 0.0, -2.0), 3, 4, 0.01);
-        initSimpleBook(texture, QVector3D(0.0, 0.0, -1.4), QVector3D(0.0, 0.0, -2.0), 3, 4, precision);
+//        initBook(QVector3D(0.0, 0.0, -1.4), QVector3D(0.0, 0.0, -2.0), 3, 4, 0.01);
+//        initSimpleBook(texture, QVector3D(0.0, 0.0, -1.4), QVector3D(0.0, 0.0, -2.0), 3, 4, precision);
 
 //    initHyperboloid(QVector3D(0,0,0), R, 0.1);
     initScene();
@@ -51,8 +51,9 @@ void Widget::paintGL()
 
     m_program->bind();
     m_program->setUniformValue("u_projectionMatrix", m_projectionMatrix);
-    m_program->setUniformValue("u_lightPosition", QVector4D(0.0, 0.0, 0.0, 1.0));
-    m_program->setUniformValue("u_lightPower", 1.0f);
+
+    m_program->setUniformValue("u_lightPosition", QVector4D(this->xLight, this->yLight, this->zLight, 1.0));
+    m_program->setUniformValue("u_lightPower", this->ambient/100);
 
     m_camera->draw(m_program);
 
@@ -214,8 +215,15 @@ void Widget::initScene() {
 
     QImage p = QImage(":/7.jpg");
 
-    m_groups.last()->addObject(FigureBuilder::initCube(p, 50));
-    m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), QVector3D(0, 0, 0), QVector3D(0, 0,10), 0.1, 5, 0.1));
+    m_groups.last()->addObject(FigureBuilder::initCube(p, 25));
+    m_groups.last()->addObject(FigureBuilder::initCylinder(QVector3D(0, -10, -25), QVector3D(0, -10, 0), 10, 0.1, 0.01));
+
+    m_groups.last()->addObject(FigureBuilder::initCylinder(QVector3D(10, 0, -25), QVector3D(10, 0, 5), 5, 5, 0.01));
+
+    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), QVector3D(10, 0, -25), 5));
+    m_groups.last()->addObject(FigureBuilder::initDiskSector(QImage(":/123.jpg"), QVector3D(10, 0, -10), 5));
+
+//    m_groups.last()->addObject(FigureBuilder::initBelt(QImage(":/123.jpg"), QVector3D(0, 0, 0), QVector3D(0, 0,10), 0.1, 5, 0.1));
 
 
     m_transformObjects.append(m_groups.last());
@@ -262,7 +270,7 @@ void Widget::initSandGlass()
     double rBorder2 = 0.5;
     double rBottom = 0.25;
 
-    QVector3D middle = QVector3D(0.0, 0.0, 0.0);
+    QVector3D middle = QVector3D(0.0, -25.0, 0.0);
 
     double radiusCurrent = rMiddle;
     QVector3D currentCenter = middle;
@@ -360,14 +368,14 @@ void Widget::initSandGlass2(double lowerBound, double upperBound, double c, doub
 
     for(double x = lowerBound - delta; x <= upperBound + delta; x += delta)
     {
-        curvePoints.push_back(QVector3D(FigureBuilder::calculteLemniscatePoint(x, c), 0.0, x));
+        curvePoints.push_back(QVector3D(FigureBuilder::calculteLemniscatePoint(x, c), 0, x - 25));
     }
 
     m_groups.push_back(QSharedPointer<Group3D>(new Group3D()));
 
     for(int i = 0; i < curvePoints.size() - 1; i++)
     {
-        //double r = curvePoints[i + 1].x() - curvePoints[i].x();
+        double r = curvePoints[i + 1].x() - curvePoints[i].x();
         double r1 = curvePoints[i].x();
         double r2 = curvePoints[i + 1].x();
 
@@ -775,5 +783,26 @@ void Widget::changeProection() {
     } else {
         m_projectionMatrix.perspective(45.0f, 5, 0.01f, 100.0f);
     }
+    this->update();
+}
+
+
+void Widget::setLightX(int val) {
+    this->xLight = val;
+    this->update();
+}
+
+void Widget::setLightY(int val) {
+    this->yLight = val;
+    this->update();
+}
+
+void Widget::setLightZ(int val) {
+    this->zLight = val;
+    this->update();
+}
+
+void Widget::setLightAmbient(int val) {
+    this->ambient= val;
     this->update();
 }

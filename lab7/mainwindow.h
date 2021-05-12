@@ -19,6 +19,15 @@ public:
 
     ~MainWindow();
 
+//private slots:
+//    void horizontalSlider_valueChanged(int value);
+
+//    void horizontalSlider_y_valueChanged(int value);
+
+//    void horizontalSlider_z_valueChanged(int value);
+
+//    void horizontalSlider_z_2_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 
@@ -31,6 +40,12 @@ private:
     QSlider *sliderX;
     QSlider *sliderY;
     QSlider *sliderZ;
+
+    QSlider *sliderXAmbient;
+    QSlider *sliderYAmbient;
+    QSlider *sliderZAmbient;
+    QSlider *sliderAmbient;
+
     QSlider *sliderSize;
     QSlider *sliderR;
     QCheckBox *check;
