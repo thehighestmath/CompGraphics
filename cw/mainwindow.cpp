@@ -64,41 +64,41 @@ MainWindow::MainWindow(QWidget *parent) :
     check->setGeometry(620, 250, 150, 30);
 
     QLabel *x, *y, *z, *a;
-    QSlider *x_s, *y_s, *z_s, *a_s, *x_Pos, *y_Pos, *z_Pos;
-    x_s = new QSlider(Qt::Horizontal, this);
-    y_s = new QSlider(Qt::Horizontal, this);
-    z_s = new QSlider(Qt::Horizontal, this);
+//    QSlider *x_s, *y_s, *z_s, *a_s, *x_Pos, *y_Pos, *z_Pos;
+//    x_s = new QSlider(Qt::Horizontal, this);
+//    y_s = new QSlider(Qt::Horizontal, this);
+//    z_s = new QSlider(Qt::Horizontal, this);
 
-    x_Pos = new QSlider(Qt::Horizontal, this);
-    y_Pos = new QSlider(Qt::Horizontal, this);
-    z_Pos = new QSlider(Qt::Horizontal, this);
+//    x_Pos = new QSlider(Qt::Horizontal, this);
+//    y_Pos = new QSlider(Qt::Horizontal, this);
+//    z_Pos = new QSlider(Qt::Horizontal, this);
 
-    a_s = new QSlider(Qt::Horizontal, this);
+//    a_s = new QSlider(Qt::Horizontal, this);
 
-    x_s->setGeometry(620, 100, 150, 30);
-    y_s->setGeometry(620, 120, 150, 30) ;
-    z_s->setGeometry(620, 140, 150, 30);
-    a_s->setGeometry(620, 160, 150, 30);
+//    x_s->setGeometry(620, 100, 150, 30);
+//    y_s->setGeometry(620, 120, 150, 30) ;
+//    z_s->setGeometry(620, 140, 150, 30);
+//    a_s->setGeometry(620, 160, 150, 30);
 
-    x_Pos->setGeometry(620, 200, 150, 30);
-    y_Pos->setGeometry(620, 220, 150, 30);
-    z_Pos->setGeometry(620, 240, 150, 30);
+//    x_Pos->setGeometry(620, 200, 150, 30);
+//    y_Pos->setGeometry(620, 220, 150, 30);
+//    z_Pos->setGeometry(620, 240, 150, 30);
 
-    x_Pos->setMinimum(-100);
-    x_Pos->setMaximum(100);
-    y_Pos->setMinimum(-100);
-    y_Pos->setMaximum(100);
-    z_Pos->setMinimum(-100);
-    z_Pos->setMaximum(100);
+//    x_Pos->setMinimum(-100);
+//    x_Pos->setMaximum(100);
+//    y_Pos->setMinimum(-100);
+//    y_Pos->setMaximum(100);
+//    z_Pos->setMinimum(-100);
+//    z_Pos->setMaximum(100);
 
-    x_s->setMinimum(-100);
-    x_s->setMaximum(100);
-    y_s->setMinimum(-100);
-    y_s->setMaximum(100);
-    z_s->setMinimum(-100);
-    z_s->setMaximum(100);
-    a_s->setMinimum(-360);
-    a_s->setMaximum(360);
+//    x_s->setMinimum(-100);
+//    x_s->setMaximum(100);
+//    y_s->setMinimum(-100);
+//    y_s->setMaximum(100);
+//    z_s->setMinimum(-100);
+//    z_s->setMaximum(100);
+//    a_s->setMinimum(-360);
+//    a_s->setMaximum(360);
 //    x
 
     x = new QLabel(this);
@@ -121,27 +121,27 @@ MainWindow::MainWindow(QWidget *parent) :
     z->setGeometry(600, 140, 30, 30);
     a->setGeometry(600, 160, 30, 30);
 
-//    this->sliderXAmbient->setGeometry(620, 100, 150, 30);
-//    this->sliderYAmbient->setGeometry(620, 120, 150, 30) ;
-//    this->sliderZAmbient->setGeometry(620, 140, 150, 30);
-//    this->sliderAmbient->setGeometry(620, 160, 150, 30);
+    this->sliderXAmbient->setGeometry(620, 100, 150, 30);
+    this->sliderYAmbient->setGeometry(620, 120, 150, 30) ;
+    this->sliderZAmbient->setGeometry(620, 140, 150, 30);
+    this->sliderAmbient->setGeometry(620, 160, 150, 30);
 
-//    this->sliderXAmbient->setMinimum(-100);
-//    this->sliderXAmbient->setMaximum(100);
-//    this->sliderYAmbient->setMinimum(-100);
-//    this->sliderYAmbient->setMaximum(100);
-//    this->sliderZAmbient->setMinimum(-100);
-//    this->sliderZAmbient->setMaximum(100);
-//    this->sliderZAmbient->setMinimum(-100);
-//    this->sliderZAmbient->setMaximum(100);
+    this->sliderXAmbient->setMinimum(-100);
+    this->sliderXAmbient->setMaximum(100);
+    this->sliderYAmbient->setMinimum(-100);
+    this->sliderYAmbient->setMaximum(100);
+    this->sliderZAmbient->setMinimum(-100);
+    this->sliderZAmbient->setMaximum(100);
+    this->sliderZAmbient->setMinimum(-100);
+    this->sliderZAmbient->setMaximum(100);
 
-//    this->sliderAmbient->setMinimum(0);
-//    this->sliderAmbient->setMaximum(200);
+    this->sliderAmbient->setMinimum(0);
+    this->sliderAmbient->setMaximum(200);
 
-//    this->sliderXAmbient->setValue(0);
-//    this->sliderYAmbient->setValue(0);
-//    this->sliderZAmbient->setValue(0);
-//    this->sliderAmbient->setValue(50);
+    this->sliderXAmbient->setValue(0);
+    this->sliderYAmbient->setValue(0);
+    this->sliderZAmbient->setValue(0);
+    this->sliderAmbient->setValue(50);
 
 
 //    QObject::connect(sliderX, SIGNAL(valueChanged(int)), glWidget, SLOT(getX(int)));
@@ -149,22 +149,23 @@ MainWindow::MainWindow(QWidget *parent) :
 //    QObject::connect(sliderZ, SIGNAL(valueChanged(int)), glWidget, SLOT(getZ(int)));
 //    QObject::connect(sliderSize, SIGNAL(valueChanged(int)), glWidget, SLOT(getSize(int)));
 //    QObject::connect(sliderR, SIGNAL(valueChanged(int)), glWidget, SLOT(getR(int)));
-//    QObject::connect(check, SIGNAL(stateChanged(int)), glWidget, SLOT(changeProection()));
-//    QObject::connect(sliderXAmbient, SIGNAL(valueChanged(int)), glWidget, SLOT(setLightX(int)));
-//    QObject::connect(sliderYAmbient, SIGNAL(valueChanged(int)), glWidget, SLOT(setLightY(int)));
-//    QObject::connect(sliderZAmbient, SIGNAL(valueChanged(int)), glWidget, SLOT(setLightZ(int)));
-//    QObject::connect(sliderAmbient , SIGNAL(valueChanged(int)), glWidget, SLOT(setLightAmbient(int)));
+    QObject::connect(check, SIGNAL(stateChanged(int)), glWidget, SLOT(changeProection()));
+    QObject::connect(sliderXAmbient, SIGNAL(valueChanged(int)), glWidget, SLOT(setLightX(int)));
+    QObject::connect(sliderYAmbient, SIGNAL(valueChanged(int)), glWidget, SLOT(setLightY(int)));
+    QObject::connect(sliderZAmbient, SIGNAL(valueChanged(int)), glWidget, SLOT(setLightZ(int)));
+    QObject::connect(sliderAmbient , SIGNAL(valueChanged(int)), glWidget, SLOT(setLightAmbient(int)));
 
-    QObject::connect(x_s , SIGNAL(valueChanged(int)), glWidget, SLOT(setX(int)));
-    QObject::connect(y_s , SIGNAL(valueChanged(int)), glWidget, SLOT(setY(int)));
-    QObject::connect(z_s , SIGNAL(valueChanged(int)), glWidget, SLOT(setZ(int)));
-    QObject::connect(a_s , SIGNAL(valueChanged(int)), glWidget, SLOT(setA(int)));
-
-    QObject::connect(x_Pos , SIGNAL(valueChanged(int)), glWidget, SLOT(setPosX(int)));
-    QObject::connect(y_Pos , SIGNAL(valueChanged(int)), glWidget, SLOT(setPosY(int)));
-    QObject::connect(z_Pos , SIGNAL(valueChanged(int)), glWidget, SLOT(setPosZ(int)));
 //    QObject::connect(this->ui->radioButton, SIGNAL(clicked()), glWidget, SLOT(changeProection()));
 //    QObject::connect(this->ui->radioButton_2, SIGNAL(clicked()), glWidget, SLOT(changeProection()));
+
+//    QObject::connect(x_s , SIGNAL(valueChanged(int)), glWidget, SLOT(setX(int)));
+//    QObject::connect(y_s , SIGNAL(valueChanged(int)), glWidget, SLOT(setY(int)));
+//    QObject::connect(z_s , SIGNAL(valueChanged(int)), glWidget, SLOT(setZ(int)));
+//    QObject::connect(a_s , SIGNAL(valueChanged(int)), glWidget, SLOT(setA(int)));
+
+//    QObject::connect(x_Pos , SIGNAL(valueChanged(int)), glWidget, SLOT(setPosX(int)));
+//    QObject::connect(y_Pos , SIGNAL(valueChanged(int)), glWidget, SLOT(setPosY(int)));
+//    QObject::connect(z_Pos , SIGNAL(valueChanged(int)), glWidget, SLOT(setPosZ(int)));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

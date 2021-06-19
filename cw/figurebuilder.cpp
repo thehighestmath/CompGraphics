@@ -101,7 +101,6 @@ SimpleObject3D *FigureBuilder::initCube(const QImage &texture, float width, floa
         indexes.append(i + 3);
     }
 
-    //return new SimpleObject3D(vertexes, indexes, QImage(":/123.jpg"));
     return new SimpleObject3D(vertexes, indexes, texture);
 }
 
@@ -272,11 +271,6 @@ SimpleObject3D *FigureBuilder::initBelt(const QImage &texture, QVector3D center1
     indexes.push_back(disk2FirstIndex + 0);
     indexes.push_back(disk2FirstIndex + disk2Points.size() - 1);
 
-    /*for(int i = 0 ; i < vertexes.size(); i++)
-    {
-        qDebug() << "#" << i << vertexes[i].position << vertexes[i].texCoords << vertexes[i].normal;
-    }
-    qDebug() << indexes;*/
 
     return new SimpleObject3D(vertexes, indexes, texture);
 }

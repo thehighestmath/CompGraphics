@@ -39,7 +39,7 @@ protected:
     void paintGL();
     void draw();
     void initShaders();
-    void initHyperboloid(QVector3D center, double R, double delta = 0.1);
+    void initArmchair(QVector3D center, double R, double delta = 0.1);
     void initScene();
 
     void initSandGlass();
